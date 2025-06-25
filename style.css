@@ -64,11 +64,15 @@ height: 332px;
 #visor {
     display: flex;
     width:305px;
+    max-width: 15ch;
     height: 50px;
     background-color: #95c5ac;
     border-style: ridge;
     border-color: #3f2c5f;
     align-self: flex-start;
+    font-size: 40px;
+    justify-content: right;
+    overflow:hidden;
 }
 
 #operator-buttons {
