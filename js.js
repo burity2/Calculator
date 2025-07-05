@@ -15,11 +15,12 @@ const divide = (a, b) => {
     if (b == 0) {
     return "( ͡° ͜ʖ ͡° )"
     } else {
-    return a / b;
+    return (a / b).toFixed(10);
     }
   
 };
 
+// combines the two numeric entries ("a" and "b") with an operator symbol "n"
 const operate = (a, n, b) => {
     if (n == "+") {
         return add(a, b);
@@ -27,7 +28,7 @@ const operate = (a, n, b) => {
         return subtract(a, b);
     } else if (n == "x"){
         return multiply(a, b);
-    } else {
+    } else if (n == "÷") {
         return divide(a, b);
     }
 };
@@ -44,10 +45,14 @@ const highlighter = (buttonId) => {
 
 // VISOR
 const visor = document.getElementById("visor")
+
 // var that stores the numbers
 let visorDisplay = []
 visor.innerText = 0
+
+//var that defines the operator symbol ("+", "−", "÷", "x")
 let n = 0
+
 // this puts the numbers into the visor
 const buttonToVisor = document.getElementById("container")
 const buttonPusher = buttonToVisor.addEventListener("click", (event) => {
@@ -111,39 +116,45 @@ const buttonPusher = buttonToVisor.addEventListener("click", (event) => {
 }
 })
 
+//plus button
 const plusButton = document.getElementById("plus");
 plusButton.addEventListener("click", () => {
     let visorNumber = visorDisplay.toString().replace(/,/g,"")
-    if (n == "+") {
+        document.getElementById("plus").style.backgroundColor = "#95c5ac";
+        document.getElementById("minus").style.backgroundColor = "#69809e";
+        document.getElementById("times").style.backgroundColor = "#69809e";
+        document.getElementById("divide").style.backgroundColor = "#69809e";
+    if (n != 0) {
+        // this allows consecutive operations without pressing the "=" key
         visor.innerText = operate(+a, n, +visorNumber)
+        n = "+"
         a = visor.innerText
         visorDisplay = []
 
     } else {
         a = visorNumber
-        document.getElementById("plus").style.backgroundColor = "#95c5ac";
-        document.getElementById("minus").style.backgroundColor = "#69809e";
-        document.getElementById("times").style.backgroundColor = "#69809e";
-        document.getElementById("divide").style.backgroundColor = "#69809e";
         n = "+"
         visorDisplay = []
     }
 })
 
+// minus button
 const minusButton = document.getElementById("minus");
 minusButton.addEventListener("click", () => {
     let visorNumber = visorDisplay.toString().replace(/,/g,"")
-    if (n == "−") {
+        document.getElementById("plus").style.backgroundColor = "#69809e";
+        document.getElementById("minus").style.backgroundColor = "#95c5ac";
+        document.getElementById("times").style.backgroundColor = "#69809e";
+        document.getElementById("divide").style.backgroundColor = "#69809e";
+    if (n != 0) {
+        //same as plus button
         visor.innerText = operate(+a, n, +visorNumber)
+        n = "−"
         a = visor.innerText
         visorDisplay = []
 
     } else {
         a = visorNumber
-        document.getElementById("plus").style.backgroundColor = "#69809e";
-        document.getElementById("minus").style.backgroundColor = "#95c5ac";
-        document.getElementById("times").style.backgroundColor = "#69809e";
-        document.getElementById("divide").style.backgroundColor = "#69809e";
         n = "−"
         visorDisplay = []
     }
@@ -152,17 +163,24 @@ minusButton.addEventListener("click", () => {
 const timesButton = document.getElementById("times");
 timesButton.addEventListener("click", () => {
     let visorNumber = visorDisplay.toString().replace(/,/g,"")
-    if (n == "x") {
-        visor.innerText = operate(+a, n, +visorNumber)
-        a = visor.innerText
-        visorDisplay = []
-
-    } else {
-        a = visorNumber
         document.getElementById("plus").style.backgroundColor = "#69809e";
         document.getElementById("minus").style.backgroundColor = "#69809e";
         document.getElementById("times").style.backgroundColor = "#95c5ac";
         document.getElementById("divide").style.backgroundColor = "#69809e";
+    if (n != 0) {
+        //same as plus button
+        if (+visorNumber == 0) {
+            //sadly a nested if statement, but this allow for the times operator not to display 0 if pressed twice
+            +visorNumber == 1
+        } else {
+        visor.innerText = operate(+a, n, +visorNumber)
+        n = "x"
+        a = visor.innerText
+        visorDisplay = []
+        }
+
+    } else {
+        a = visorNumber
         n = "x"
         visorDisplay = []
     }
@@ -171,17 +189,24 @@ timesButton.addEventListener("click", () => {
 const divideButton = document.getElementById("divide");
 divideButton.addEventListener("click", () => {
     let visorNumber = visorDisplay.toString().replace(/,/g,"")
-    if (n == "÷") {
-        visor.innerText = operate(+a, n, +visorNumber)
-        a = visor.innerText
-        visorDisplay = []
-
-    } else {
-        a = visorNumber
         document.getElementById("plus").style.backgroundColor = "#69809e";
         document.getElementById("minus").style.backgroundColor = "#69809e";
         document.getElementById("times").style.backgroundColor = "#69809e";
         document.getElementById("divide").style.backgroundColor = "#95c5ac";
+    if (n != 0) {
+        // same as plus button
+            if (+visorNumber == 0) {
+            //same as the times nested if statement
+            +visorNumber == 1
+            } else {
+        visor.innerText = operate(+a, n, +visorNumber)
+        n = "÷"
+        a = visor.innerText
+        visorDisplay = []
+        }
+
+    } else {
+        a = visorNumber
         n = "÷"
         visorDisplay = []
     }
@@ -196,7 +221,7 @@ equalButton.addEventListener("click", () => {
             document.getElementById("times").style.backgroundColor = "#69809e";
             document.getElementById("divide").style.backgroundColor = "#69809e";
             visor.innerText = operate(+a, n, +visorNumber)
-            n = 0
+            a = visor.innerText
             visorDisplay = []
 
 })
@@ -213,55 +238,3 @@ clearButton.addEventListener("click", () => {
             document.getElementById("times").style.backgroundColor = "#69809e";
             document.getElementById("divide").style.backgroundColor = "#69809e";
     })
-
-```
-const operatorButtons = document.getElementById("operator-buttons")
-operatorButtons.addEventListener("click", (event) => {
-    let visorNumber = visorDisplay.toString().replace(/,/g,"")
-    a = visorNumber
-    const buttonClicked = event.target;
-
-    switch(buttonClicked.id) {
-        case "plus":
-            if (n == "+"){
-                let visorNumber = visorDisplay.toString().replace(/,/g,"")
-                visor.innerText = operate(+a, n, +visorNumber)
-                visorDisplay = []
-                
-            } else {
-            document.getElementById("plus").style.backgroundColor = "#95c5ac";
-            document.getElementById("minus").style.backgroundColor = "#69809e";
-            document.getElementById("times").style.backgroundColor = "#69809e";
-            document.getElementById("divide").style.backgroundColor = "#69809e";
-            n = "+"
-            visorDisplay = []
-            }
-            break;
-        case "minus":
-            document.getElementById("plus").style.backgroundColor = "#69809e";
-            document.getElementById("minus").style.backgroundColor = "#95c5ac";
-            document.getElementById("times").style.backgroundColor = "#69809e";
-            document.getElementById("divide").style.backgroundColor = "#69809e";
-            n = "−"
-            visorDisplay = []
-            break;
-        case "times":
-            document.getElementById("plus").style.backgroundColor = "#69809e";
-            document.getElementById("minus").style.backgroundColor = "#69809e";
-            document.getElementById("times").style.backgroundColor = "#95c5ac";
-            document.getElementById("divide").style.backgroundColor = "#69809e";
-            n = "x"
-            visorDisplay = []
-            break;
-        case "divide":
-            document.getElementById("plus").style.backgroundColor = "#69809e";
-            document.getElementById("minus").style.backgroundColor = "#69809e";
-            document.getElementById("times").style.backgroundColor = "#69809e";
-            document.getElementById("divide").style.backgroundColor = "#95c5ac";
-            n = "÷"
-            visorDisplay = []
-            break;
-
-    }
-})
-```
